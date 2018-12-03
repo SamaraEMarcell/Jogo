@@ -1,0 +1,104 @@
+var pulo = false; 
+var yp = 0; 
+var xdo, ydo; 
+var contFrames = 0; 
+var vidas = 5; 
+var pontos = 0;
+var contFrames = 0; 
+var p1x = 80;
+var py = 400;
+var p2x = 180;
+var raioMaior = 25; 
+var linha1 = false;
+var p1x2 = 250;
+var py2 = 380;
+var p2x2 = 350;
+var linha2 = false;
+
+function colisaoAcimaDaLinha(x,y,x1,x2,yl){ 
+   // verifica se está em uma altura mínima da reta 
+  if (x > x1 && x < x2 && yl - y > 0 && yl - y < raioMaior) {
+  return true;     
+  }
+  else {
+    return false;
+  }
+}
+
+// os códigos de "setup" só executam uma vez 
+function setup() {
+createCanvas(500, 480);
+xdo = 50;
+ydo = 440; 
+frameRate(30);
+}
+
+// os códigos de "draw" executam constantemente 
+function draw() {
+background(255,187,255);
+fill(112,128,144);
+stroke(112, 128, 144);
+ellipse(xdo,ydo+yp,30,60); 
+textSize(32);
+fill(127,255,212);
+stroke(127,255,212);
+text("Vidas: "+vidas, 10, 60);
+text("Pontos: "+pontos, 10, 90);
+strokeWeight(4); 
+stroke(255); 
+line(p1x,py,p2x,py); 
+strokeWeight(4); 
+stroke(255); 
+line(p1x2,py2,p2x2,py2); 
+
+
+if ( keyIsDown(RIGHT_ARROW) ) {
+xdo = xdo + 4; 
+if ( xdo > width ){
+xdo = 0; 
+}
+}
+
+if (keyIsDown(UP_ARROW) && (! pulo) ){ 
+pulo = true; 
+contFrames = 0; 
+}
+if( keyIsDown(LEFT_ARROW))
+{
+xdo = xdo - 4;
+if ( xdo < 0 ){
+xdo = width
+}
+}
+if (pulo) {
+contFrames++; 
+// movimenta o pulo / tiro 
+yp = 0.5*(contFrames)*(contFrames - 30);
+// se o pulo sumir na tela 
+if (yp > 0) {
+// habilida a ocorrência de um novo pulo 
+pulo = false;
+yp = 0;
+}
+}
+  if (colisaoAcimaDaLinha(xdo,ydo+yp,p1x,p2x,py) && ! linha1 ||colisaoAcimaDaLinha(xdo,ydo+yp,p1x2,p2x2,py2) && ! linha2) {
+    ydo = py- raioMaior+1; 
+      ydo = py2 - raioMaior+1;
+      yp = 0; 
+        linha1 = true;
+      linha2 = true;
+      pulo = false;
+  }
+if ( linha1 && (  xdo < p1x || xdo > p2x )&& linha2 && (  xdo < p1x2 || xdo > p2x2 )) {
+    linha1 = false; 
+      linha2 = false;
+      
+    }
+    if ( ! linha1 ||!linha2 ) {
+      ydo = ydo + 6; 
+      if (ydo > 440) {
+        ydo = 440; 
+      }
+    }
+
+}
